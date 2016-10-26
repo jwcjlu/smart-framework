@@ -11,9 +11,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.smart4j.framework.annotation.Aspect;
+import org.smart4j.framework.annotation.Service;
 import org.smart4j.framework.proxy.AspectProxy;
 import org.smart4j.framework.proxy.Proxy;
 import org.smart4j.framework.proxy.ProxyManager;
+import org.smart4j.framework.proxy.TransationProxy;
 
 /**
  * 方法拦截助手类
@@ -39,6 +41,11 @@ public class AopHelper {
 	}
 	private static Map<Class<?>,Set<Class<?>>> createProxyMap() throws Exception{
 		Map<Class<?>,Set<Class<?>>> proxyMap=new HashMap<Class<?>,Set<Class<?>>>();
+		createAspectProxyMap(proxyMap);
+		createTransactionProxyMap(proxyMap);
+		return proxyMap;
+	}
+	private static void  createAspectProxyMap(Map<Class<?>,Set<Class<?>>>  proxyMap) throws Exception{
 		Set<Class<?>> proxyClassSet=ClassHelper.getClassSetBySuper(AspectProxy.class);
 		for(Class<?> proxyClass:proxyClassSet){
 			if(proxyClass.isAnnotationPresent(Aspect.class)){
@@ -47,7 +54,10 @@ public class AopHelper {
 				proxyMap.put(proxyClass, targetClassSet);
 			}
 		}
-		return proxyMap;
+	}
+	private static void  createTransactionProxyMap(Map<Class<?>,Set<Class<?>>>  proxyMap) throws Exception{
+		Set<Class<?>> serviceClassSet=ClassHelper.getClassSetBySuper(Service.class);
+		proxyMap.put(TransationProxy.class, serviceClassSet);
 	}
 
 	private static Set<Class<?>> createTargetClassSet(Aspect aspect)throws Exception {
