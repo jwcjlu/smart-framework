@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @author jinwei
  *
  */
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Transaction {
 
